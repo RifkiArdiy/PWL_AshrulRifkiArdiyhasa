@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWL 2025</title>
+</head>
+<body>
+    <h1>PEMROGRAMAN WEB LANJUT | ASHRUL RIFKI ARDIYHASA</h1>
+</body>
+</html>
+
+
+
+
+
+{{-- <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -137,4 +153,4 @@
             </div>
         </div>
     </body>
-</html>
+</html> --}}
