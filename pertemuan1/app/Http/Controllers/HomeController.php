@@ -4,27 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class WelcomeController extends Controller
+class HomeController extends Controller
 {
-
-    public function greeting()
-    {
-        // return view('hello', ['name' => 'Ashrul Rifki Ardiyhasa']);
-        return view('hello')
-            ->with('name', 'Ashrul Rifki Ardiyhasa')
-            ->with('occupation', 'Astronaut');
-    }
-
-
-
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         //
-        return 'Hello World';
     }
 
     /**
