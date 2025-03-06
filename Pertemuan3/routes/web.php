@@ -36,3 +36,4 @@ Route::get('/sales', [SalesController::class, 'index'])->name('sales.pos');
 
 Route::get('/level', [LevelController::class, 'index']);
 Route::get('/kategori', [KategoriController::class, 'index']);
+Route::get('/user', [UserController::class, 'index']);
