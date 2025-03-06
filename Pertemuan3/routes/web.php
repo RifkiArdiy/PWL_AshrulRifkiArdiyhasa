@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LevelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -32,4 +33,4 @@ Route::get('/user/{id}/name/{name}', [UserController::class, 'show'])->name('use
 
 Route::get('/sales', [SalesController::class, 'index'])->name('sales.pos');
 
-
+Route::get('/level', [LevelController::class, 'index']);
