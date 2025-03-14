@@ -27,6 +27,18 @@ class UserController extends Controller
         return view('user_tambah');
     }
 
+    public function tambah_simpan(Request $request)
+    {
+        $data = [
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => Hash::make('$request->password'),
+            'level_id' => $request->level_id
+        ];
+        UserModel::create($data);
+        return redirect('/user');
+    }
+
     public function ubah($id)
     {
         $user = UserModel::find($id);
@@ -40,16 +52,6 @@ class UserController extends Controller
         return redirect('/user');
     }
 
-    public function tambah_simpan(Request $request)
-    {
-        UserModel::create([
-            'username' => $request->username,
-            'nama' => $request->nama,
-            'password' => Hash::make('$request->password'),
-            'level_id' => $request->level_id
-        ]);
-        return redirect('/user');
-    }
     public function ubah_simpan($id, Request $request)
     {
         $user = UserModel::find($id);
@@ -89,20 +91,21 @@ class UserController extends Controller
         //     'nama' => 'Manager 2',
         //     'password' => Hash::make('12345'),
         // ];
-        // UserModel::created($data);
+        // UserModel::create($data);
+        
         // $user = UserModel::all(); // ambil semua data dari tabel m_user
         // return view('user', ['data' => $user]);
-
+        
         // $data = [
         //     'level_id' => 2,
-        //     'username' => 'manager_dua',
-        //     'nama' => 'Manager 2',
+        //     'username' => 'manager_tiga',
+        //     'nama' => 'Manager 3',
         //     'password' => Hash::make('12345'),
         // ];
-        // UserModel::created($data);
+        // UserModel::create($data);
+        
         // $user = UserModel::all(); // ambil semua data dari tabel m_user
         // return view('user', ['data' => $user]);
-
 
 
         // --------------------- Jobsheet 4 RETREIVING SINGLE MODELS---------------------
@@ -142,24 +145,11 @@ class UserController extends Controller
         // dd($user);
         // return view('user', ['data' => $user]);
 
+        // $user = UserModel::where('level_id', 2)->count(); // Hitung jumlah user dengan level_id 2
+        // return view('user', ['data' => $user]); // Kirim data ke view}
+
 
         // --------------------- Jobsheet 4 Praktikum 2.4   ---------------------
-        // $user = UserModel::firstOrCreate(
-        //     [
-        //         'username' => 'manager',
-        //         'nama' => 'Manager',
-        //     ]
-        // );
-        // return view('user', ['data' => $user]);
-
-        // $user = UserModel::firstOrNew(
-        //     [
-        //         'username' => 'manager',
-        //         'nama' => 'Manager',
-        //     ]
-        // );
-        // return view('user', ['data' => $user]);
-
         // $user = UserModel::firstOrCreate(
         //     [
         //         'username' => 'manager',
@@ -258,7 +248,8 @@ class UserController extends Controller
         // --------------------- Jobsheet 4 Praktikum 2.6 ---------------------
         // $user = UserModel::all(); // ambil semua data dari tabel m_user
         // return view('user', ['data' => $user]);        
-
+        
+        // --------------------- Jobsheet 4 Praktikum 2.7 ---------------------
 
         // $user = UserModel::with('level')->get();
         // dd($user);

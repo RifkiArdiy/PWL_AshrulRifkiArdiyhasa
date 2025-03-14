@@ -12,5 +12,8 @@ class LevelModel extends Model
     // {
     //     return $this->belongsTo(UserModel::class); 
     // }
+    protected $table = 'm_level';
+    protected $primaryKey = 'level_id';
+
     use HasFactory;
 }

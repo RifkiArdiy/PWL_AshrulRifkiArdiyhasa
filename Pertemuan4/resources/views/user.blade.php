@@ -23,13 +23,14 @@
             <td>{{ $d->level_id }}</td>
         </tr>
         @endforeach --}}
+
         {{-- <tr>
             <td>{{ $data->user_id }}</td>
             <td>{{ $data->username }}</td>
             <td>{{ $data->nama }}</td>
             <td>{{ $data->level_id }}</td>
-        </tr> --}}
-        
+        </tr>
+         --}}
         @foreach ($data as $d)
         <tr>
             <td>{{ $d->user_id }}</td>
@@ -38,9 +39,10 @@
             <td>{{ $d->level_id }}</td>
             <td>{{ $d->level->level_kode }}</td>
             <td>{{ $d->level->level_nama }}</td>
-            <td><a href="/user/ubah{{ $d->user_id }}">Ubah</a> | <a href="/user/hapus{{ $d->user_id }}">Hapus</a></td>
+            <td><a href="/user/ubah/{{ $d->user_id }}">Ubah</a> | <a href="/user/hapus/{{ $d->user_id }}">Hapus</a></td>
         </tr>
         @endforeach
+    
     </table>
 </body>
 </html>
