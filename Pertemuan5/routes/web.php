@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -45,3 +46,16 @@ Route::get('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
 Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
 Route::get('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
 Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
+
+
+
+// ------------------------------------------ Jobsheet 5 ------------------------------------------
+// Route::get('/hello', function () {
+//     return view('blog.hello', ['name' => 'Andi']);
+// });
+
+Route::get('/hello', [WelcomeController::class, 'hello']);
+
+Route::get('/child', function () {
+    return view('child');
+});
