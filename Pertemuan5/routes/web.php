@@ -60,5 +60,6 @@ Route::get('/child', function () {
     return view('child');
 });
 
-Route::get('/kategori/create', [KategoriController::class, 'create']);
-Route::post('/kategori', [KategoriController::class, 'store']);
+// Route::get('/kategori/create', [KategoriController::class, 'create']);
+// Route::post('/kategori', [KategoriController::class, 'store']);
+Route::resource('kategori', KategoriController::class);
