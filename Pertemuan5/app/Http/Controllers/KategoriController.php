@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\KategoriDataTable;
+use App\Models\KategoriModel;
 use DB;
 use Illuminate\Http\Request;
 
@@ -24,11 +25,26 @@ class KategoriController extends Controller
 
         // $row = DB::table('m_kategori')->where('kategori_kode', 'SNK')->delete();
         // return "Delete data berhasil. Jumlah data yang dihapus: " . $row . " baris";
-        
+
         // $data = DB::table('m_kategori')->get();
         // return view('kategori', ['data' => $data]);
 
         // --------------------------------------------- Jobsheet 5 ---------------------------------------------
         return $dataTable->render('kategori.index');
+    }
+
+    public function create()
+    {
+        return view('kategori.create');
+    }
+
+    public function store(Request $request)
+    {
+        KategoriModel::create([
+            'kategori_kode' => $request->kodeKategori,
+            'kategori_nama' => $request->namaKategori,
+        ]);
+
+        return redirect('/kategori');
     }
 }
