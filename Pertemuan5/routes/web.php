@@ -55,6 +55,7 @@ Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
 // });
 
 Route::get('/hello', [WelcomeController::class, 'hello']);
+Route::get('/', [WelcomeController::class, 'index']);
 
 Route::get('/child', function () {
     return view('child');
@@ -63,3 +64,5 @@ Route::get('/child', function () {
 // Route::get('/kategori/create', [KategoriController::class, 'create']);
 // Route::post('/kategori', [KategoriController::class, 'store']);
 Route::resource('kategori', KategoriController::class);
+
+

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>A{{ config('app.name', 'PWL Laravel Starter Code') }}</title>
+    <title>{{ config('app.name', 'PWL Laravel Starter Code') }}</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Untuk mengirimkan token laravel CSRF pada setiap req ajax -->
@@ -36,7 +36,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{url('/')}}" class="brand-link">
-                <img src="{{assets('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo"
+                <img src="{{asset('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">PWL - Starter Code</span>
             </a>
@@ -68,13 +68,13 @@
     <!-- ./wrapper -->
 
     <!-- jQuery -->
-    <script src="{{ assets('../../plugins/jquery/jquery.min.js')}}"></script>
+    <script src="{{ asset('../../plugins/jquery/jquery.min.js')}}"></script>
     <!-- Bootstrap 4 -->
-    <script src="{{ assets('../../plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{ asset('../../plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <!-- AdminLTE App -->
-    <script src="{{ assets('../../dist/js/adminlte.min.js')}}"></script>
+    <script src="{{ asset('../../dist/js/adminlte.min.js')}}"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="{{ assets('../../dist/js/demo.js')}}"></script>
+    <script src="{{ asset('../../dist/js/demo.js')}}"></script>
 </body>
 
 </html>
