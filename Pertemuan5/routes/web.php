@@ -21,31 +21,31 @@ use App\Http\Controllers\SalesController;
 */
 
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
-Route::prefix('category')->group(function () {
-    Route::get('/food-beverage', [ProductController::class, 'foodBeverage']);
-    Route::get('/beauty-health', [ProductController::class, 'beautyHealth']);
-    Route::get('/home-care', [ProductController::class, 'homeCare']);
-    Route::get('/baby-kid', [ProductController::class, 'babyKid']);
-});
+// Route::prefix('category')->group(function () {
+//     Route::get('/food-beverage', [ProductController::class, 'foodBeverage']);
+//     Route::get('/beauty-health', [ProductController::class, 'beautyHealth']);
+//     Route::get('/home-care', [ProductController::class, 'homeCare']);
+//     Route::get('/baby-kid', [ProductController::class, 'babyKid']);
+// });
 
-Route::get('/user/{id}/name/{name}', [UserController::class, 'show'])->name('users.profile');
+// Route::get('/user/{id}/name/{name}', [UserController::class, 'show'])->name('users.profile');
 
-Route::get('/sales', [SalesController::class, 'index'])->name('sales.pos');
+// Route::get('/sales', [SalesController::class, 'index'])->name('sales.pos');
 
-Route::get('/level', [LevelController::class, 'index']);
-Route::get('/kategori', [KategoriController::class, 'index']);
-Route::get('/user', [UserController::class, 'index']);
+// Route::get('/level', [LevelController::class, 'index']);
+// Route::get('/kategori', [KategoriController::class, 'index']);
+// Route::get('/user', [UserController::class, 'index']);
 
 
 // ------------------------------------------ Jobsheet 4 ------------------------------------------
-Route::get('/user/tambah', [UserController::class, 'tambah']);
-Route::get('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
-Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
-Route::get('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
-Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
+// Route::get('/user/tambah', [UserController::class, 'tambah']);
+// Route::get('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
+// Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
+// Route::get('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
+// Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
 
 
 
@@ -54,15 +54,24 @@ Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
 //     return view('blog.hello', ['name' => 'Andi']);
 // });
 
-Route::get('/hello', [WelcomeController::class, 'hello']);
-Route::get('/', [WelcomeController::class, 'index']);
+// Route::get('/hello', [WelcomeController::class, 'hello']);
+// Route::get('/', [WelcomeController::class, 'index']);
 
-Route::get('/child', function () {
-    return view('child');
-});
+// Route::get('/child', function () {
+//     return view('child');
+// });
 
 // Route::get('/kategori/create', [KategoriController::class, 'create']);
 // Route::post('/kategori', [KategoriController::class, 'store']);
-Route::resource('kategori', KategoriController::class);
+// Route::resource('kategori', KategoriController::class);
 
-
+Route::group(['prefix' => 'user'], function () {
+    Route::get('/', [UserController::class, 'index']);             // menampilkan halaman awal user
+    Route::post('/list', [UserController::class, 'list']);        // menampilkan data user dalam bentuk json untuk datatables
+    Route::get('/create', [UserController::class, 'create']);    // menampilkan halaman form tambah user
+    Route::post('/', [UserController::class, 'store']);          // menyimpan data user baru
+    Route::get('/{id}', [UserController::class, 'show']);        // menampilkan detail user
+    Route::get('/{id}/edit', [UserController::class, 'edit']);  // menampilkan halaman form edit user
+    Route::put("/{id}", [UserController::class, 'update']);       // menyimpan perubahan data user
+    Route::delete('/{id}', [UserController::class, 'destroy']);  // menghapus data user
+});
