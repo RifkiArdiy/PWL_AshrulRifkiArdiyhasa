@@ -148,9 +148,15 @@ Route::group(['prefix' => 'level'], function () {
     Route::post('/list', [LevelController::class, 'list']);        // menampilkan data LevelController dalam bentuk json untuk datatables
     Route::get('/create', [LevelController::class, 'create']);    // menampilkan halaman form tambah LevelController
     Route::post('/', [LevelController::class, 'store']);          // menyimpan data LevelController baru
+    Route::get('/create_ajax', [LevelController::class, 'create_ajax']);    // menampilkan halaman form tambah user
+    Route::post('/ajax', [LevelController::class, 'store_ajax']);    // menampilkan halaman form tambah user
     Route::get('/{id}', [LevelController::class, 'show']);        // menampilkan detail LevelController
     Route::get('/{id}/edit', [LevelController::class, 'edit']);  // menampilkan halaman form edit LevelController
     Route::put("/{id}", [LevelController::class, 'update']);       // menyimpan perubahan data LevelController
+    Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);    // menampilkan halaman form tambah user
+    Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']);    // menampilkan halaman form tambah user
+    Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);  // menghapus data user
+    Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);  // menghapus data user
     Route::delete('/{id}', [LevelController::class, 'destroy']);  // menghapus data LevelController
 });
 
