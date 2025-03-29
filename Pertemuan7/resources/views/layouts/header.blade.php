@@ -136,5 +136,10 @@
                 <i class="fas fa-th-large"></i>
             </a>
         </li>
+        <li class="nav-item">
+            <button onclick="window.location.href='{{ url('/logout') }}'" class="btn btn-danger">
+                Logout
+            </button>            
+        </li>
     </ul>
 </nav>

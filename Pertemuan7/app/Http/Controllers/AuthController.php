@@ -34,7 +34,8 @@ class AuthController extends Controller
             ]); 
         } 
  
-        return redirect('login'); 
+        // return redirect('login'); 
+        return back(); 
     } 
  
     public function logout(Request $request) 

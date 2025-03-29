@@ -58,7 +58,7 @@ use App\Http\Controllers\SupplierController;
 // });
 
 // Route::get('/hello', [WelcomeController::class, 'hello']);
-// Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/', [WelcomeController::class, 'index']);
 
 // Route::get('/child', function () {
 //     return view('child');
