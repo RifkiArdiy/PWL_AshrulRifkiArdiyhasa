@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Validator;
@@ -357,8 +358,8 @@ class LevelController extends Controller
             'level_kode',
             'level_nama'
         )
-        ->orderBy('level_id')
-        ->get();
+            ->orderBy('level_id')
+            ->get();
 
         //load library excel
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -385,7 +386,7 @@ class LevelController extends Controller
         }
 
         $sheet->setTitle('Data Level'); //set judul sheet
-        $writer = IOFactory ::createWriter($spreadsheet, 'Xlsx'); //set writer
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx'); //set writer
         $filename = 'Data_Level_' . date('Y-m-d_H-i-s') . '.xlsx'; //set nama file
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -401,6 +402,24 @@ class LevelController extends Controller
         exit; //keluar dari scriptA
     }
 
+    public function export_pdf()
+    {
+        $level = LevelModel::select(
+            'level_kode',
+            'level_nama',
+        )
+            ->orderBy('level_id')
+            ->orderBy('level_kode')
+            ->get();
+
+        // use Barryvdh\DomPDF\Facade\Pdf;
+        $pdf = Pdf::loadView('level.export_pdf', ['level' => $level]);
+        $pdf->setPaper('A4', 'portrait'); // set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
+        $pdf->render(); // render pdf
+
+        return $pdf->stream('Data Level ' . date('Y-m-d H-i-s') . '.pdf');
+    }
 }
 
 
