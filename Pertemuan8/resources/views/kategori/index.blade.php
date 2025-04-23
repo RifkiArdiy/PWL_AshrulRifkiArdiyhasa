@@ -42,6 +42,7 @@
                 $('#myModal').modal('show');
             });
         }
+        var dataKategori;
         $(document).ready(function () {
             var dataUser = $('#table_kategori').DataTable({
                 serverSide: true, // serverSide: true, jika ingin menggunakan server side processing
