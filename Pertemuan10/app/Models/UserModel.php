@@ -2,27 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\LevelModel;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class UserModel extends Authenticatable
+class UserModel extends Authenticatable implements JWTSubject
 {
-    public function getJWTdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return[];
-    }
-
     use HasFactory;
-    protected $table = 'm_user'; // Mendefinisikan nama tabel yang digunakan oleh model ini
-    protected $primaryKey = 'user_id'; // Mendefinisikan primary key dari tabel yang digunakan oleh model ini
+
+    protected $table = 'm_user';
+    protected $primaryKey = 'user_id';
 
     protected $fillable = [
         'username',
@@ -31,8 +21,18 @@ class UserModel extends Authenticatable
         'profile_photo',
         'level_id',
         'created_at',
-        'updated_at'
-    ]; // Mendefinisikan kolom yang dapat diisi oleh model ini
+        'updated_at',
+    ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     public function level(): BelongsTo
     {
