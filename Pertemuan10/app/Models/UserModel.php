@@ -6,10 +6,20 @@ use App\Models\LevelModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable ;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class UserModel extends Authenticatable
 {
+    public function getJWTdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return[];
+    }
+
     use HasFactory;
     protected $table = 'm_user'; // Mendefinisikan nama tabel yang digunakan oleh model ini
     protected $primaryKey = 'user_id'; // Mendefinisikan primary key dari tabel yang digunakan oleh model ini
@@ -33,7 +43,7 @@ class UserModel extends Authenticatable
     {
         return $this->level->level_nama;
     }
-    
+
     public function hasRole($role): bool
     {
         return $this->level->level_kode == $role;
