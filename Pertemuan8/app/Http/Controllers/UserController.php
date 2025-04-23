@@ -7,6 +7,7 @@ use App\Models\LevelModel;
 use App\Models\UserModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Validator;
 use Hash;
@@ -590,7 +591,7 @@ class UserController extends Controller
 
     public function import()
     {
-        return view('user.import');
+        return view('users.import');
     }
 
     public function import_ajax(Request $request)
@@ -690,9 +691,9 @@ class UserController extends Controller
             'username',
             'nama',
         )
-        ->orderBy('level_id')
-        ->with('level')
-        ->get();
+            ->orderBy('level_id')
+            ->with('level')
+            ->get();
 
         //load library excel
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -721,7 +722,7 @@ class UserController extends Controller
         }
 
         $sheet->setTitle('Data User'); //set judul sheet
-        $writer = IOFactory ::createWriter($spreadsheet, 'Xlsx'); //set writer
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx'); //set writer
         $filename = 'Data_User_' . date('Y-m-d_H-i-s') . '.xlsx'; //set nama file
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -737,24 +738,102 @@ class UserController extends Controller
         exit; //keluar dari scriptA
     }
 
-    public function export_pdf(){
+    public function export_pdf()
+    {
         $user = UserModel::select(
             'level_id',
             'username',
             'nama',
         )
-        ->orderBy('level_id')
-        ->orderBy('username')
-        ->with('level')
-        ->get();
+            ->orderBy('level_id')
+            ->orderBy('username')
+            ->with('level')
+            ->get();
 
         // use Barryvdh\DomPDF\Facade\Pdf;
-        $pdf = Pdf::loadView('user.export_pdf', ['user' => $user]);
+        $pdf = Pdf::loadView('users.export_pdf', ['user' => $user]);
         $pdf->setPaper('A4', 'portrait'); // set ukuran kertas dan orientasi
         $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
         $pdf->render(); // render pdf
 
-        return $pdf->stream('Data User '.date('Y-m-d H-i-s').'.pdf');
+        return $pdf->stream('Data User ' . date('Y-m-d H-i-s') . '.pdf');
     }
-}
 
+    public function profile()
+    {
+        // Ambil user yang sedang login sebagai instance model Eloquent
+        $user = auth()->user();
+
+        $breadcrumb = (object) [
+            'title' => 'Profil Saya',
+            'list' => ['Home', 'Profil']
+        ];
+
+        $page = (object) [
+            'title' => 'Profil Pengguna'
+        ];
+
+        $activeMenu = ''; // set jika diperlukan
+
+        return view('users.profile', compact('user', 'breadcrumb', 'page', 'activeMenu'));
+    }
+
+    public function profile_ajax()
+    {
+        $user = auth()->user();
+        return view('users.edit_profile', compact('user'));
+    }
+
+    public function profile_update(Request $request)
+    {
+        // Melakukan validasi input file
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:m_user,user_id',
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        // Mencari data user berdasarkan ID yang dikirim (dari hidden field)
+        $user = UserModel::find($request->input('user_id'));
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User tidak ditemukan.'
+            ]);
+        }
+
+        // Jika ada file foto profil yang diunggah
+        if ($request->hasFile('profile_photo') && $request->file('profile_photo')->isValid()) {
+            $file = $request->file('profile_photo');
+            $filename = $user->user_id . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+            // Hapus file lama jika ada
+            if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+                Storage::disk('public')->delete($user->profile_photo);
+            }
+
+            // Simpan file baru
+            $path = $file->storeAs('profiles', $filename, 'public');
+            $user->profile_photo = $path;
+            $user->save();
+        }
+
+
+        // Simpan perubahan ke database
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Profil berhasil diperbarui'
+        ]);
+    }
+
+}
