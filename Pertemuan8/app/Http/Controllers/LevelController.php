@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Validator;
 use App\Models\LevelModel;
 use Illuminate\Http\Request;
@@ -59,8 +60,8 @@ class LevelController extends Controller
                 //     . csrf_field() . method_field('DELETE') .
                 //     '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';
                 // return $btn;
+    
 
-                
                 $btn = '<button onclick="modalAction(\'' . url('/level/' . $levels->level_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/level/' . $levels->level_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/level/' . $levels->level_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
@@ -179,8 +180,8 @@ class LevelController extends Controller
         // cek apakah request berupa ajax
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-            'level_kode' => 'required|string|max:10|unique:m_level,level_kode',
-            'level_nama' => 'required|string|max:100'
+                'level_kode' => 'required|string|max:10|unique:m_level,level_kode',
+                'level_nama' => 'required|string|max:100'
             ];
 
 
@@ -216,8 +217,8 @@ class LevelController extends Controller
         // cek apakah request berupa ajax
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-            'level_kode' => 'required|string|max:10|unique:m_level,level_kode,'.$id.',level_id',
-            'level_nama' => 'required|string|max:100'
+                'level_kode' => 'required|string|max:10|unique:m_level,level_kode,' . $id . ',level_id',
+                'level_nama' => 'required|string|max:100'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -241,7 +242,8 @@ class LevelController extends Controller
         redirect('/');
     }
 
-    public function confirm_ajax(string $id) {
+    public function confirm_ajax(string $id)
+    {
         $level = LevelModel::find($id);
 
         return view('level.confirm_ajax', ['level' => $level]);
@@ -250,33 +252,103 @@ class LevelController extends Controller
 
     public function delete_ajax(Request $request, $id)
     {
-    // cek apakah request dari ajax
-    if ($request->ajax() || $request->wantsJson()) {
-        try {
-            $level = LevelModel::find($id);
-            if ($level) {
-                $level->delete();
+        // cek apakah request dari ajax
+        if ($request->ajax() || $request->wantsJson()) {
+            try {
+                $level = LevelModel::find($id);
+                if ($level) {
+                    $level->delete();
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data berhasil dihapus'
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan'
+                    ]);
+                }
+            } catch (\Illuminate\Database\QueryException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini'
+                ]);
+            }
+        }
+
+        return redirect('/');
+    }
+
+    public function import()
+    {
+        return view('level.import');
+    }
+
+    public function import_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+
+            $rules = [
+                // Validasi file harus xlsx, maksimal 1MB
+                'file_level' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            // Ambil file dari request
+            $file = $request->file('file_level');
+
+            // Membuat reader untuk file excel dengan format Xlsx
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true); // Hanya membaca data saja
+
+            // Load file excel
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet(); // Ambil sheet yang aktif
+
+            // Ambil data excel sebagai array
+            $data = $sheet->toArray(null, false, true, true);
+            $insert = [];
+
+            // Pastikan data memiliki lebih dari 1 baris (header + data)
+            if (count($data) > 1) {
+                foreach ($data as $baris => $value) {
+                    if ($baris > 1) { // Baris pertama adalah header, jadi lewati
+                        $insert[] = [
+                            'level_kode' => $value['A'],
+                            'level_nama' => $value['B'],
+                            'created_at' => now(),
+                        ];
+                    }
+                }
+
+                if (count($insert) > 0) {
+                    // Insert data ke database, jika data sudah ada, maka diabaikan
+                    LevelModel::insertOrIgnore($insert);
+                }
+
                 return response()->json([
                     'status' => true,
-                    'message' => 'Data berhasil dihapus'
+                    'message' => 'Data berhasil diimport'
                 ]);
             } else {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Data tidak ditemukan'
+                    'message' => 'Tidak ada data yang diimport'
                 ]);
             }
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Data gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini'
-            ]);
         }
-    }
 
-    return redirect('/');
+        return redirect('/');
     }
 }
-
 
 
